@@ -8,6 +8,7 @@ export const KRAKATAU_SERVICE = {
   },
   POST: {
     loginUser: "/auth/login",
+    registerUser: "auth/register",
     logoutUser: "/auth/logout",
   },
 };

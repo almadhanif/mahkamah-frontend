@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
@@ -71,7 +70,7 @@ export default function UsersPage() {
     } else {
       // Create user
       await createUser({
-        endpoint: "/user/create",
+        endpoint: KRAKATAU_SERVICE.POST.registerUser,
         data: values,
       });
     }
@@ -80,7 +79,7 @@ export default function UsersPage() {
     setIsModalOpen(false);
     setEditingUser(null);
     form.reset();
-    userService.invalidate(["users"]);
+    refetch();
   };
 
   const handleEdit = (user: User) => {
