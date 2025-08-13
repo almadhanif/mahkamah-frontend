@@ -1,3 +1,4 @@
+"use client";
 import { AuthenticationForm } from "@/components/ui/login";
 export default function Home() {
   return (

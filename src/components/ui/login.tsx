@@ -14,12 +14,14 @@ import {
 import { useForm } from "@mantine/form";
 import { upperFirst, useToggle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { useRouter } from "next/navigation";
 import Networks from "@/lib/api/network-factory";
 import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function AuthenticationForm(props: PaperProps) {
   const router = useRouter();
+  const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const [type, toggle] = useToggle(["login", "register"]);
 
   // Buat service instance
@@ -47,9 +49,18 @@ export function AuthenticationForm(props: PaperProps) {
     },
   });
 
+  useEffect(() => {
+    if (loginSuccess) {
+      router.prefetch("/dashboard");
+      const timer = setTimeout(() => {
+        router.replace("/dashboard");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [loginSuccess, router]);
+
   const handleSubmit = async (values: typeof form.values) => {
     if (type === "login") {
-      // Gunakan loginMutation dengan parameter yang sesuai
       await loginMutation({
         endpoint: KRAKATAU_SERVICE.POST.loginUser,
         data: {
@@ -63,8 +74,7 @@ export function AuthenticationForm(props: PaperProps) {
         message: "You have been logged in successfully",
         color: "green",
       });
-
-      router.push("/users");
+      setLoginSuccess(true);
     } else {
       notifications.show({
         title: "Register",
@@ -73,6 +83,14 @@ export function AuthenticationForm(props: PaperProps) {
       });
     }
   };
+
+  if (loginSuccess) {
+    return (
+      <div className="flex items-center justify-center">
+        <p>Login successful. Redirecting to dashboard...</p>
+      </div>
+    );
+  }
 
   return (
     <Paper radius="md" p="lg" withBorder {...props}>

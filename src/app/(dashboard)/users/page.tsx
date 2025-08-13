@@ -11,17 +11,26 @@ import {
 import { useForm } from "@mantine/form";
 import Networks from "@/lib/api/network-factory";
 import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-}
+import { useClientCookies } from "@/helpers/useClientCookies";
+import { useRouter } from "next/navigation";
+import { User } from "@/types/types";
 
 export default function UsersPage() {
+  const router = useRouter();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {
+    cookies,
+    getUserFromCookies,
+    isAuthenticated,
+    clearAuthCookies,
+  } = useClientCookies();
+  const user = getUserFromCookies();
+
+  console.log("Is authenticated:", isAuthenticated());
+  console.log("Current user:", user);
+  console.log("All cookies:", cookies);
 
   const userService = Networks("service");
 
@@ -35,8 +44,7 @@ export default function UsersPage() {
   ]);
 
   // Setup mutations
-  const { mutateAsync: createUser, isPending: isCreating } =
-    userService.useMutation("post");
+  const { mutateAsync, isPending } = userService.useMutation("post");
   const { mutateAsync: updateUser, isPending: isUpdating } =
     userService.useMutation("put");
   const { mutateAsync: deleteUser, isPending: isDeleting } =
@@ -64,12 +72,12 @@ export default function UsersPage() {
     if (editingUser) {
       // Update user
       await updateUser({
-        endpoint: `/user/${editingUser.id}`,
+        endpoint: `/user/${editingUser.user_id}`,
         data: values,
       });
     } else {
       // Create user
-      await createUser({
+      await mutateAsync({
         endpoint: KRAKATAU_SERVICE.POST.registerUser,
         data: values,
       });
@@ -99,6 +107,14 @@ export default function UsersPage() {
     userService.invalidate(["users"]);
   };
 
+  const handleLogout = async () => {
+    await mutateAsync({
+      endpoint: KRAKATAU_SERVICE.POST.logoutUser,
+    });
+    clearAuthCookies();
+    router.replace("/");
+  };
+
   return (
     <div>
       <Group mb="md">
@@ -111,6 +127,9 @@ export default function UsersPage() {
           }}
         >
           Add User
+        </Button>
+        <Button variant="outline" color="red" onClick={handleLogout}>
+          Logout
         </Button>
       </Group>
 
@@ -128,7 +147,7 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {users?.map((user: User) => (
-              <tr key={user.id}>
+              <tr key={user.user_id}>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.role}</td>
@@ -143,7 +162,7 @@ export default function UsersPage() {
                     <Button
                       size="xs"
                       color="red"
-                      onClick={() => handleDelete(user.id)}
+                      onClick={() => handleDelete(user.user_id)}
                       loading={isDeleting}
                     >
                       Delete
@@ -181,7 +200,7 @@ export default function UsersPage() {
             mb="md"
           />
           <Group>
-            <Button type="submit" loading={isCreating || isUpdating}>
+            <Button type="submit" loading={isPending || isUpdating}>
               {editingUser ? "Update" : "Create"}
             </Button>
           </Group>
