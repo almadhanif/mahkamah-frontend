@@ -169,9 +169,8 @@ function DashboardPage() {
                     "Apakah Anda ingin mengatur parameter prediksi?",
                   subMessage:
                     "Perubahan parameter akan mempengaruhi hasil prediksi",
-                  variant: "warning",
+                  variant: "danger",
                   handleConfirm: () => {
-                    console.log("Confirm clicked");
                     // Your action here
                   },
                 });
