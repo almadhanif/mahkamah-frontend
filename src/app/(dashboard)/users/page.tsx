@@ -3,34 +3,21 @@
 import { useState } from "react";
 import {
   Button,
+  Container,
   Group,
   Modal,
+  Skeleton,
   Table,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Networks from "@/lib/api/network-factory";
 import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
-import { useClientCookies } from "@/helpers/useClientCookies";
-import { useRouter } from "next/navigation";
 import { User } from "@/types/types";
 
 export default function UsersPage() {
-  const router = useRouter();
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const {
-    cookies,
-    getUserFromCookies,
-    isAuthenticated,
-    clearAuthCookies,
-  } = useClientCookies();
-  const user = getUserFromCookies();
-
-  console.log("Is authenticated:", isAuthenticated());
-  console.log("Current user:", user);
-  console.log("All cookies:", cookies);
 
   const userService = Networks("service");
 
@@ -95,7 +82,7 @@ export default function UsersPage() {
     form.setValues({
       name: user.name,
       email: user.email,
-      role: user.role,
+      role: user.role_code,
     });
     setIsModalOpen(true);
   };
@@ -107,16 +94,8 @@ export default function UsersPage() {
     userService.invalidate(["users"]);
   };
 
-  const handleLogout = async () => {
-    await mutateAsync({
-      endpoint: KRAKATAU_SERVICE.POST.logoutUser,
-    });
-    clearAuthCookies();
-    router.replace("/");
-  };
-
   return (
-    <div>
+    <Container fluid py="sm">
       <Group mb="md">
         <h1>Users</h1>
         <Button
@@ -128,30 +107,27 @@ export default function UsersPage() {
         >
           Add User
         </Button>
-        <Button variant="outline" color="red" onClick={handleLogout}>
-          Logout
-        </Button>
       </Group>
 
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
+      <Skeleton visible={isLoading} height={300}>
         <Table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Email</Table.Th>
+              <Table.Th>Role</Table.Th>
+              <Table.Th>Actions</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {users?.map((user: User) => (
-              <tr key={user.user_id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
+              <Table.Tr key={user.user_id}>
+                <Table.Td className="capitalize">
+                  {user.name}
+                </Table.Td>
+                <Table.Td>{user.email}</Table.Td>
+                <Table.Td>{user.role_code}</Table.Td>
+                <Table.Td>
                   <Group>
                     <Button
                       size="xs"
@@ -168,12 +144,12 @@ export default function UsersPage() {
                       Delete
                     </Button>
                   </Group>
-                </td>
-              </tr>
+                </Table.Td>
+              </Table.Tr>
             ))}
-          </tbody>
+          </Table.Tbody>
         </Table>
-      )}
+      </Skeleton>
 
       <Modal
         opened={isModalOpen}
@@ -206,6 +182,6 @@ export default function UsersPage() {
           </Group>
         </form>
       </Modal>
-    </div>
+    </Container>
   );
 }
