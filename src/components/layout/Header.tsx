@@ -1,13 +1,16 @@
+// src/components/layout/Header.tsx
+
+"use client";
+
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { TextInput } from "@mantine/core";
-import ProfilePicture from "../ui/ProfilePicture";
-import iconUser from "@/styles/assets/icon-user.jpg";
+import UserMenu from "./UserMenu";
 
 export default function Header() {
   return (
-    <header className="w-full border-b border-gray-300">
-      <div className="flex items-center justify-between p-3">
-        <div className="w-full">
+    <header className="w-full border-b border-gray-300 bg-white sticky top-0 z-20">
+      <div className="flex items-center justify-between gap-4 px-4 py-2">
+        <div className="flex-grow w-full">
           <TextInput
             leftSection={
               <Icon
@@ -19,7 +22,8 @@ export default function Header() {
             placeholder="Cari disini"
           />
         </div>
-        <ProfilePicture alt="User Profile" imageUrl={iconUser.src} />
+
+        <UserMenu />
       </div>
     </header>
   );

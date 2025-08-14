@@ -21,8 +21,8 @@ function ProfilePicture({
   withBadge = false,
   badgeIcon,
   name,
-  size = "md",
-  radius = "xl",
+  size,
+  radius,
   className,
 }: ProfilePictureProps) {
   const getInitial = (string: string | undefined) => {
