@@ -43,3 +43,16 @@ export const color = {
   orange1: "#D68326",
   toska1: "#30AD93",
 };
+
+export const menuOptions = [
+  {
+    label: "My Profile",
+    value: "profile",
+    icon: "iconamoon:profile-circle-fill",
+  },
+  {
+    label: "Logout",
+    value: "logout",
+    icon: "material-symbols:logout",
+  },
+];

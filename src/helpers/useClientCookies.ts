@@ -2,12 +2,45 @@
 
 import { useEffect, useState } from "react";
 import { ParsedCookie } from "@/types/types";
+import {
+  getServerCookies,
+  getUserDataFromServer,
+} from "@/lib/api/helpers/setCookie";
 
 export function useClientCookies() {
   const [cookies, setCookies] = useState<Record<string, string>>({});
+  const [user, setUser] = useState<ParsedCookie | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch cookies and user data from the server
   useEffect(() => {
-    if (typeof document !== "undefined" && document.cookie) {
+    const fetchCookiesFromServer = async () => {
+      try {
+        setLoading(true);
+        // Get cookies from server action
+        const serverCookies = await getServerCookies();
+        setCookies(serverCookies);
+
+        // Get user data from server
+        const userData = await getUserDataFromServer();
+        setUser(userData);
+      } catch (error) {
+        console.error("Error fetching cookies from server:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCookiesFromServer();
+  }, []);
+
+  // Original cookie parsing logic as fallback
+  useEffect(() => {
+    if (
+      typeof document !== "undefined" &&
+      document.cookie &&
+      Object.keys(cookies).length === 0
+    ) {
       const parsedCookies = document.cookie
         .split("; ")
         .filter((cookie) => cookie.includes("="))
@@ -23,33 +56,25 @@ export function useClientCookies() {
           {} as Record<string, string>,
         );
 
-      setCookies(parsedCookies);
+      // Only update if we found something and don't already have server cookies
+      if (Object.keys(parsedCookies).length > 0) {
+        setCookies(parsedCookies);
+      }
     }
-  }, []);
+  }, [cookies]);
 
   const getCookie = (name: string) => cookies[name];
 
-  // ✅ Helper untuk mendapatkan user info dari cookies
   const getUserFromCookies = (): ParsedCookie | null => {
-    const { name, phone_number, role, token, uid, userId } = cookies;
-
-    if (!token || !userId) {
-      return null;
-    }
-
-    return {
-      name: name || "",
-      phone_number,
-      role: role || "",
-      token,
-      uid: uid || "",
-      userId: parseInt(userId, 10) || 0,
-    };
+    // Return the pre-parsed user data from the server
+    return user;
   };
 
-  // ✅ Check if user is authenticated
   const isAuthenticated = () => {
-    return !!cookies.token && !!cookies.userId;
+    // Check if we have a token or user data
+    return (
+      !!user || !!cookies.token || !!cookies.smartkmsystemAuthClient
+    );
   };
 
   const setCookie = (
@@ -103,7 +128,6 @@ export function useClientCookies() {
     });
   };
 
-  // ✅ Clear all auth cookies
   const clearAuthCookies = () => {
     const authCookieNames = [
       "token",
@@ -112,14 +136,25 @@ export function useClientCookies() {
       "uid",
       "name",
       "phone_number",
+      "smartkmsystemAuthClient",
+      "user",
+      "SA",
+      "isHijacked",
+      "userId",
     ];
+
     authCookieNames.forEach((name) =>
       removeCookie(name, { path: "/" }),
     );
+
+    // Reset user state
+    setUser(null);
   };
 
   return {
     cookies,
+    user,
+    loading,
     getCookie,
     setCookie,
     removeCookie,
