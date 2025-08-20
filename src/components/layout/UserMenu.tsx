@@ -105,6 +105,11 @@ export default function UserMenu() {
               alt="User Profile"
               imageUrl={iconUser.src}
             />
+            <Icon
+              icon="ri:arrow-down-s-line"
+              width="24"
+              height="24"
+            />
           </UnstyledButton>
         </Combobox.Target>
 
