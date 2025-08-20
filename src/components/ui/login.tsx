@@ -1,11 +1,8 @@
 "use client";
 
 import {
-  Anchor,
   Button,
   Checkbox,
-  Group,
-  Paper,
   PaperProps,
   PasswordInput,
   Stack,
@@ -13,9 +10,10 @@ import {
   Box,
   Text,
   Flex,
+  Loader,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { upperFirst, useToggle } from "@mantine/hooks";
+// import { useToggle } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import Networks from "@/lib/api/network-factory";
 import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
@@ -25,7 +23,7 @@ import { useRouter } from "next/navigation";
 export function AuthenticationForm(props: PaperProps) {
   const router = useRouter();
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
-  const [type] = useToggle(["login", "register"]);
+  // const [type] = useToggle(["login", "register"]);
 
   // Buat service instance
   const authService = Networks("service");
@@ -86,6 +84,7 @@ export function AuthenticationForm(props: PaperProps) {
     return (
       <Box className="flex items-center justify-center p-4">
         <Text>Login berhasil. Mengarahkan ke dashboard...</Text>
+        <Loader size="sm" type="bars" />
       </Box>
     );
   }

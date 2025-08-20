@@ -1,10 +1,10 @@
 "use client";
 
-import { NavLink, Stack, Box } from "@mantine/core";
+import { NavLink, Stack, Box, Flex, Text } from "@mantine/core";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
-import logo from "@/styles/assets/krakatau_logo.svg";
+import logo from "@/styles/assets/logoMA.jpg";
 import Image from "next/image";
 
 const navLinks = [
@@ -34,16 +34,20 @@ export default function Sidebar() {
       py="md"
       pl="xs"
       // px="xs"
-      bg="gray.0"
+      bg="white"
       style={{ borderRight: "1px solid var(--mantine-color-gray-3)" }}
     >
-      <Image
-        src={logo}
-        alt="Krakatau Steel Logo"
-        width="150"
-        height="100"
-        className="mb-6 mt-2 mr-4 ml-2"
-      />
+      <Flex align="center" className="space-x-2 mb-6">
+        <Image
+          src={logo}
+          alt="Mahkamah Agung Logo"
+          width="60"
+          height="60"
+        />
+        <Text size="md" fw={700}>
+          Mahkamah Agung
+        </Text>
+      </Flex>
 
       <Stack gap="xs">
         {navLinks.map((link) => {
