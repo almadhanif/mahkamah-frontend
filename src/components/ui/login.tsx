@@ -10,6 +10,9 @@ import {
   PasswordInput,
   Stack,
   TextInput,
+  Box,
+  Text,
+  Flex,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst, useToggle } from "@mantine/hooks";
@@ -22,7 +25,7 @@ import { useRouter } from "next/navigation";
 export function AuthenticationForm(props: PaperProps) {
   const router = useRouter();
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
-  const [type, toggle] = useToggle(["login", "register"]);
+  const [type] = useToggle(["login", "register"]);
 
   // Buat service instance
   const authService = Networks("service");
@@ -34,18 +37,13 @@ export function AuthenticationForm(props: PaperProps) {
   const form = useForm({
     initialValues: {
       email: "",
-      name: "",
       password: "",
-      terms: true,
+      remember: false,
     },
 
     validate: {
       email: (val) =>
-        /^\S+@\S+$/.test(val) ? null : "Invalid email",
-      // password: (val) =>
-      //   val.length <= 6
-      //     ? "Password should include at least 6 characters"
-      //     : null,
+        /^\S+@\S+$/.test(val) ? null : "Email tidak valid",
     },
   });
 
@@ -60,7 +58,7 @@ export function AuthenticationForm(props: PaperProps) {
   }, [loginSuccess, router]);
 
   const handleSubmit = async (values: typeof form.values) => {
-    if (type === "login") {
+    try {
       await loginMutation({
         endpoint: KRAKATAU_SERVICE.POST.loginUser,
         data: {
@@ -70,60 +68,60 @@ export function AuthenticationForm(props: PaperProps) {
       });
 
       notifications.show({
-        title: "Login successful",
-        message: "You have been logged in successfully",
+        title: "Login berhasil",
+        message: "Anda berhasil masuk ke sistem",
         color: "green",
       });
       setLoginSuccess(true);
-    } else {
+    } catch (error) {
       notifications.show({
-        title: "Register",
-        message: "Registration functionality not implemented yet",
-        color: "blue",
+        title: "Login gagal",
+        message: "Email atau password salah",
+        color: "red",
       });
     }
   };
 
   if (loginSuccess) {
     return (
-      <div className="flex items-center justify-center">
-        <p>Login successful. Redirecting to dashboard...</p>
-      </div>
+      <Box className="flex items-center justify-center p-4">
+        <Text>Login berhasil. Mengarahkan ke dashboard...</Text>
+      </Box>
     );
   }
 
   return (
-    <Paper radius="md" p="lg" withBorder {...props}>
+    <Box {...props}>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <Stack>
-          {type === "register" && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) =>
-                form.setFieldValue("name", event.currentTarget.value)
-              }
-              radius="md"
-            />
-          )}
-
+        <Stack gap="md">
           <TextInput
             required
             label="Email"
-            placeholder="hello@mantine.dev"
+            placeholder="Masukan email"
             value={form.values.email}
             onChange={(event) =>
               form.setFieldValue("email", event.currentTarget.value)
             }
-            error={form.errors.email && "Invalid email"}
-            radius="md"
+            error={form.errors.email}
+            size="md"
+            styles={{
+              label: {
+                marginBottom: 8,
+                fontWeight: 500,
+              },
+              input: {
+                borderColor: "#e0e0e0",
+                "&:focus": {
+                  borderColor: "#228be6",
+                },
+              },
+            }}
           />
 
           <PasswordInput
             required
             label="Password"
-            placeholder="Your password"
+            placeholder="Masukan password"
             value={form.values.password}
             onChange={(event) =>
               form.setFieldValue(
@@ -132,40 +130,63 @@ export function AuthenticationForm(props: PaperProps) {
               )
             }
             error={form.errors.password}
-            radius="md"
+            size="md"
+            styles={{
+              label: {
+                marginBottom: 8,
+                fontWeight: 500,
+              },
+              input: {
+                borderColor: "#e0e0e0",
+                "&:focus": {
+                  borderColor: "#228be6",
+                },
+              },
+            }}
           />
 
-          {type === "register" && (
+          <Flex justify="space-between" align="center" mt="xs">
+            {/* <Anchor
+              component="button"
+              type="button"
+              size="sm"
+              c="blue"
+              fw={500}
+            >
+              Forgot password?
+            </Anchor> */}
+
             <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
+              label="Remember me"
+              checked={form.values.remember}
               onChange={(event) =>
                 form.setFieldValue(
-                  "terms",
+                  "remember",
                   event.currentTarget.checked,
                 )
               }
             />
-          )}
-        </Stack>
+          </Flex>
 
-        <Group justify="space-between" mt="xl">
-          <Anchor
-            component="button"
-            type="button"
-            c="dimmed"
-            onClick={() => toggle()}
-            size="xs"
+          <Button
+            type="submit"
+            loading={isPending}
+            fullWidth
+            size="md"
+            styles={{
+              root: {
+                backgroundColor: "#0369a1",
+                "&:hover": {
+                  backgroundColor: "#0284c7",
+                },
+              },
+            }}
+            mt="md"
           >
-            {type === "register"
-              ? "Already have an account? Login"
-              : "Don't have an account? Register"}
-          </Anchor>
-          <Button type="submit" radius="xl" loading={isPending}>
-            {upperFirst(type)}
+            Sign In
           </Button>
-        </Group>
+        </Stack>
       </form>
-    </Paper>
+    </Box>
   );
 }

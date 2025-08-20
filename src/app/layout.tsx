@@ -5,6 +5,7 @@ import "./globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/charts/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/carousel/styles.css";
 import MantineProvider from "@/lib/providers/MantineProvider";
 import QueryProvider from "@/lib/providers/QueryProvider";
 import PrefetchLinks from "@/components/PrefetchLinks";
@@ -14,8 +15,8 @@ import ModalPortal from "@/components/ui/Modals/ModalPortal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Krakatau Steel",
-  description: "Krakatau Steel Management System",
+  title: "Mahkamah Agung",
+  description: "Mahkamah Agung Management System",
 };
 
 export default function RootLayout({
