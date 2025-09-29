@@ -45,10 +45,15 @@ export const color = {
 };
 
 export const menuOptions = [
+  // {
+  //   label: "My Profile",
+  //   value: "profile",
+  //   icon: "iconamoon:profile-circle-fill",
+  // },
   {
-    label: "My Profile",
-    value: "profile",
-    icon: "iconamoon:profile-circle-fill",
+    label: "List Users",
+    value: "/users",
+    icon: "mdi:users-outline",
   },
   {
     label: "Logout",

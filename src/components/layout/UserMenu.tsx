@@ -20,6 +20,7 @@ import { menuOptions } from "@/styles/constants";
 import { useClientCookies } from "@/helpers/useClientCookies";
 import Networks from "@/lib/api/network-factory";
 import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
+import Link from "next/link";
 
 export default function UserMenu() {
   const router = useRouter();
@@ -47,21 +48,42 @@ export default function UserMenu() {
     router.replace("/");
   };
 
-  const options = menuOptions.map((item, index) => (
-    <Combobox.Option
-      value={item.value}
-      key={item.value}
-      className={cx(classes.menuItem, {
-        [classes.animateOption]: animating,
-      })}
-      style={{ animationDelay: `${index * 30}ms` }}
-    >
-      <div className="flex items-center gap-2 py-2 px-3">
-        <Icon icon={item.icon} width={18} />
-        <span>{item.label}</span>
-      </div>
-    </Combobox.Option>
-  ));
+  const options = menuOptions.map((item, index) => {
+    const isLogout = item.value === "logout";
+
+    return (
+      <Combobox.Option
+        value={item.value}
+        key={item.value}
+        className={cx(classes.menuItem, {
+          [classes.animateOption]: animating,
+        })}
+        style={{ animationDelay: `${index * 30}ms` }}
+      >
+        {isLogout ? (
+          <button
+            type="button"
+            onClick={async (e) => {
+              e.preventDefault();
+              await handleLogout();
+            }}
+            className="flex items-center gap-2 py-2 px-3 w-full text-left"
+          >
+            <Icon icon={item.icon} width={18} />
+            <span>{item.label}</span>
+          </button>
+        ) : (
+          <Link
+            href={item.value}
+            className="flex items-center gap-2 py-2 px-3 w-full"
+          >
+            <Icon icon={item.icon} width={18} />
+            <span>{item.label}</span>
+          </Link>
+        )}
+      </Combobox.Option>
+    );
+  });
 
   if (isPending) {
     return (
@@ -81,9 +103,6 @@ export default function UserMenu() {
           switch (val) {
             case "logout":
               await handleLogout();
-              break;
-            case "profile":
-              router.push("/profile");
               break;
             default:
               break;
