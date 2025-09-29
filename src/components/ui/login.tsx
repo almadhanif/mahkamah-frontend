@@ -63,7 +63,7 @@ export function AuthenticationForm() {
         color: "green",
       });
       setLoginSuccess(true);
-    } catch (err) {
+    } catch {
       setError("Email atau password salah");
       notifications.show({
         title: "Login gagal",

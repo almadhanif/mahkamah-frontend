@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  NavLink,
-  Stack,
-  Box,
-  ActionIcon,
-  Tooltip,
-} from "@mantine/core";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { Stack, Box, ActionIcon, Tooltip } from "@mantine/core";
 import { Icon } from "@iconify/react";
 import logoBig from "../../../public/logo-fortech.webp";
 import logoSmall from "../../../public/icon-fortech.jpg";
@@ -23,8 +15,6 @@ export default function Sidebar({
   minimized,
   setMinimized,
 }: SidebarProps) {
-  const pathname = usePathname();
-
   return (
     <Box
       style={{
