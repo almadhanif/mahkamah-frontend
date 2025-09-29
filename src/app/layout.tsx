@@ -15,8 +15,13 @@ import ModalPortal from "@/components/ui/Modals/ModalPortal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mahkamah Agung",
-  description: "Mahkamah Agung Management System",
+  title: "AI Document System - Fortech Indotama",
+  description: "Fortech Indotama AI Document System",
+  icons: {
+    icon: "/icon-fortech.jpg",
+    shortcut: "/icon-fortech.jpg",
+    apple: "/icon-fortech.jpg",
+  },
 };
 
 export default function RootLayout({
