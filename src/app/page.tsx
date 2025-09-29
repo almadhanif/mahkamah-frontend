@@ -1,216 +1,106 @@
 "use client";
-import { AuthenticationForm } from "@/components/ui/login";
-import { Grid, Box, Text, Center, Flex } from "@mantine/core";
-import { useRef } from "react";
 
-import Autoplay from "embla-carousel-autoplay";
-import { Carousel } from "@mantine/carousel";
-import image1 from "@/styles/assets/images4.jpg";
-import image2 from "@/styles/assets/images1.jpg";
-import image3 from "@/styles/assets/images2.jpg";
-import image4 from "@/styles/assets/images3.jpg";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import { AuthenticationForm } from "@/components/ui/login";
 
-import logo from "@/styles/assets/logoMA.jpg";
-
-export default function Home() {
-  const autoplay = useRef(Autoplay({ delay: 5000 }));
-
+export default function HCMISLoginPage() {
   return (
-    <Grid gutter={0} className="h-screen">
-      {/* Left Column - Login Form */}
-      <Grid.Col span={{ base: 12, md: 5 }} className="h-screen">
-        <Flex
-          direction="column"
-          justify="space-between"
-          h="100%"
-          py="xl"
-          px="lg"
+    <div className="min-h-screen w-full lg:grid lg:grid-cols-2">
+      {/* Kolom Kiri: Form Login */}
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="w-full max-w-md space-y-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Logo and Header */}
-          <Box ml={20}>
-            <Flex align="center" gap="md" mb="xl">
+          {/* Logo dan Judul */}
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
               <Image
-                src={logo.src}
-                width={60}
-                height={60}
-                alt="Mahkamah Agung Logo"
+                src="/logo-fortech.webp"
+                alt="Logo"
+                width={96}
+                height={120}
               />
-              <div>
-                <Text size="xl" fw={600} c="dark.8">
-                  Mahkamah Agung
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Republik Indonesia
-                </Text>
-              </div>
-            </Flex>
-          </Box>
+            </div>
+            <h1 className="text-3xl font-bold font-montserrat text-primary">
+              Selamat Datang
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Smart Document Analysis System
+            </p>
+          </div>
 
-          {/* Login Form Container */}
-          <Center style={{ flex: 1 }}>
-            <Box w="100%" maw={400} mx="auto">
-              <Text size="xl" fw={700} mb="sm">
-                Sistem Informasi
-              </Text>
-              <Text size="md" c="dimmed" mb="xl">
-                Silakan masuk untuk mengakses sistem
-              </Text>
-
+          {/* Kartu Form Login */}
+          <Card className="shadow-lg border-t-4 border-t-primary">
+            <CardHeader className="text-center">
+              <CardTitle className="text-xl font-montserrat">
+                Masuk ke Akun Anda
+              </CardTitle>
+              <CardDescription>
+                Gunakan kredensial Anda untuk melanjutkan.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               <AuthenticationForm />
-            </Box>
-          </Center>
+            </CardContent>
+          </Card>
 
           {/* Footer */}
-          <Box ta="center" c="dimmed" pb={30}>
-            <Flex align="center" justify="center" gap="xs" mb="xs">
-              <Box component="span" mt={4}>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-              </Box>
-              <Text size="sm">Helpdesk</Text>
-            </Flex>
-            <Text size="xs">Powered by Fortech Indotama | 2025</Text>
-          </Box>
-        </Flex>
-      </Grid.Col>
+          <p className="mt-10 text-center text-xs text-gray-500">
+            © 2025 PT. Fortech Indotama
+            <br />
+            Seluruh hak cipta dilindungi.
+          </p>
+        </motion.div>
+      </div>
 
-      {/* Right Column - Info Section */}
-      <Grid.Col
-        span={{ base: 12, md: 7 }}
-        className="h-screen bg-gray-100"
-        visibleFrom="md"
-      >
-        <Flex
-          direction="column"
-          justify="center"
-          align="center"
-          h="100%"
-          py={40}
-          px={20}
+      {/* Kolom Kanan: Gambar Latar */}
+      <div className="hidden lg:block relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url('/login-bg.jpg')` }}
         >
-          {/* Feature Image/Screenshot */}
-          <Box
-            mb={60}
-            style={{
-              width: "90%",
-              maxWidth: "750px",
-              position: "relative",
-            }}
-          >
-            <Carousel
-              withIndicators
-              height={400}
-              plugins={[autoplay.current]}
-              onMouseEnter={autoplay.current.stop}
-              onMouseLeave={() => autoplay.current.play()}
-              // styles={{
-              //   indicators: {
-              //     bottom: "-3rem",
-              //   },
-              //   indicator: {
-              //     width: "3rem",
-              //     height: "0.25rem",
-              //     transition: "width 250ms ease",
-              //   },
-              // }}
-            >
-              <Carousel.Slide>
-                <Box
-                  className="overflow-hidden shadow-xl"
-                  style={{
-                    width: "100%",
-                    height: "400px",
-                    position: "relative",
-                  }}
-                >
-                  <Image
-                    src={image1}
-                    alt="System Screenshot"
-                    fill={true}
-                  />
-                </Box>
-              </Carousel.Slide>
-              <Carousel.Slide>
-                <Box
-                  className="overflow-hidden shadow-xl"
-                  style={{
-                    width: "100%",
-                    height: "400px",
-                    position: "relative",
-                  }}
-                >
-                  <Image
-                    src={image2}
-                    alt="System Screenshot"
-                    fill={true}
-                  />
-                </Box>
-              </Carousel.Slide>
-              <Carousel.Slide>
-                <Box
-                  className="overflow-hidden shadow-xl"
-                  style={{
-                    width: "100%",
-                    height: "400px",
-                    position: "relative",
-                  }}
-                >
-                  <Image
-                    src={image3}
-                    alt="System Screenshot"
-                    fill={true}
-                  />
-                </Box>
-              </Carousel.Slide>
-              <Carousel.Slide>
-                <Box
-                  className="overflow-hidden shadow-xl"
-                  style={{
-                    width: "100%",
-                    height: "400px",
-                    position: "relative",
-                  }}
-                >
-                  <Image
-                    src={image4}
-                    alt="System Screenshot"
-                    fill={true}
-                  />
-                </Box>
-              </Carousel.Slide>
-            </Carousel>
-          </Box>
+          {/* Efek Overlay Gradasi */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        </div>
 
-          {/* Information Text */}
-          <Box ta="center" mb="md" px="xl">
-            <Text className="text-black" size="2rem" fw={700} mb="md">
-              Sistem Manajemen Pengetahuan
-            </Text>
-            <Text
-              className="text-black"
-              size="lg"
-              opacity={0.9}
-              maw={600}
-              mx="auto"
-            >
-              Wadah kolaborasi dan berbagi pengetahuan
-            </Text>
-          </Box>
-        </Flex>
-      </Grid.Col>
-    </Grid>
+        {/* Konten di atas gambar */}
+        <motion.div
+          className="relative h-full flex flex-col justify-end p-10 text-white"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-white/10">
+            <Icon
+              icon="mdi:shield-check"
+              width="24"
+              height="24"
+              className=" text-white/80 mb-4"
+            />
+            <h2 className="text-2xl font-semibold font-montserrat leading-tight">
+              Artificial Intelligence Document System
+            </h2>
+            <p className="mt-2 text-white/80 max-w-lg">
+              Kami memastikan data Anda terlindungi dengan enkripsi
+              tingkat lanjut serta menyediakan alat yang Anda butuhkan
+              untuk manajemen dokumen analisis yang terintegrasi
+              dengan Artificial Intelligence.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    </div>
   );
 }
