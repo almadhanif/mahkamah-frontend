@@ -87,7 +87,7 @@ export default function ConfirmationModalTemplate({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-9999">
       {/* Backdrop with improved opacity */}
       <div
         className="fixed inset-0 backdrop-blur-sm bg-black/30 transition-opacity duration-300"
