@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
       afterFiles: [
         {
           source: "/api/v1/:path*",
-          destination: "http://localhost:3001/:path*",
+          destination: "http://localhost:5015/:path*",
         },
       ],
       fallback: [],
