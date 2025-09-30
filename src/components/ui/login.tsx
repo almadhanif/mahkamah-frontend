@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button, Loader } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import Networks from "@/lib/api/network-factory";
-import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
+import { DOCUMENT_SERVICE } from "@/lib/api/endpoint";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export function AuthenticationForm() {
@@ -50,7 +50,7 @@ export function AuthenticationForm() {
 
     try {
       await loginMutation({
-        endpoint: KRAKATAU_SERVICE.POST.loginUser,
+        endpoint: DOCUMENT_SERVICE.POST.loginUser,
         data: {
           email: formData.email,
           password: formData.password,
