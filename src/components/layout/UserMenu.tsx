@@ -19,7 +19,7 @@ import classes from "./UserMenu.module.css";
 import { menuOptions } from "@/styles/constants";
 import { useClientCookies } from "@/helpers/useClientCookies";
 import Networks from "@/lib/api/network-factory";
-import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
+import { DOCUMENT_SERVICE } from "@/lib/api/endpoint";
 import Link from "next/link";
 
 export default function UserMenu() {
@@ -42,7 +42,7 @@ export default function UserMenu() {
   // Handler for logout
   const handleLogout = async () => {
     await mutateAsync({
-      endpoint: KRAKATAU_SERVICE.POST.logoutUser,
+      endpoint: DOCUMENT_SERVICE.POST.logoutUser,
     });
     clearAuthCookies();
     router.replace("/");

@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import Networks from "@/lib/api/network-factory";
-import { KRAKATAU_SERVICE } from "@/lib/api/endpoint";
+import { DOCUMENT_SERVICE } from "@/lib/api/endpoint";
 import { User } from "@/types/types";
 
 export default function UsersPage() {
@@ -26,7 +26,7 @@ export default function UsersPage() {
     data: users = [],
     isLoading,
     refetch,
-  } = userService.useQuery<User[]>(KRAKATAU_SERVICE.GET.getAllUsers, [
+  } = userService.useQuery<User[]>(DOCUMENT_SERVICE.GET.getAllUsers, [
     "users",
   ]);
 
@@ -65,7 +65,7 @@ export default function UsersPage() {
     } else {
       // Create user
       await mutateAsync({
-        endpoint: KRAKATAU_SERVICE.POST.registerUser,
+        endpoint: DOCUMENT_SERVICE.POST.registerUser,
         data: values,
       });
     }
