@@ -1,17 +1,29 @@
-import cn from "@helpers/cn";
-import PropTypes from "prop-types";
+import { cn } from "@/lib/utils/utils";
+import NoData from "../../../../public/no-data.png";
+import Image from "next/image";
 
-import NoData from "../Assets/Icon/NoData";
+type NoItemsProps = {
+  label: string;
+  classNames?: {
+    wrapper?: string;
+    icon?: string;
+    label?: string;
+  };
+};
 
 function NoItems({
   label,
   classNames = { wrapper: "", icon: "", label: "" },
-}) {
+}: NoItemsProps) {
   return (
     <div
       className={`mx-auto my-auto flex text-grey items-center justify-center flex-col gap-3 ${classNames.wrapper}`}
     >
-      <NoData className={`w-32 h-32 ${classNames.icon}`} />
+      <Image
+        src={NoData}
+        alt="No Data"
+        className={`w-32 h-32 ${classNames.icon}`}
+      />
       <p
         className={cn(
           "text-lg font-normal text-center",
@@ -23,23 +35,5 @@ function NoItems({
     </div>
   );
 }
-
-NoItems.propTypes = {
-  label: PropTypes.string,
-  classNames: PropTypes.shape({
-    wrapper: PropTypes.string,
-    icon: PropTypes.string,
-    label: PropTypes.string,
-  }),
-};
-
-NoItems.defaultProps = {
-  label: "No items",
-  classNames: {
-    wrapper: "",
-    icon: "",
-    label: "",
-  },
-};
 
 export default NoItems;
