@@ -11,6 +11,9 @@ import {
   Button,
   Group,
   Loader,
+  Text,
+  NavLink,
+  Divider,
 } from "@mantine/core";
 import { Tree, RenderTreeNodePayload } from "@mantine/core";
 import Networks from "@/lib/api/network-factory";
@@ -19,11 +22,11 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { notifications } from "@mantine/notifications";
 import NiceModal from "@ebay/nice-modal-react";
 import MODAL_IDS from "../ui/Modals/modalIds";
+import { useFolderStore } from "@/store/folder/folderStore";
 
 interface SidebarProps {
   minimized: boolean;
   setMinimized: React.Dispatch<React.SetStateAction<boolean>>;
-  onFolderSelect?: (folderId: number | null) => void;
 }
 
 type FolderNode = {
@@ -36,9 +39,9 @@ type FolderNode = {
 export default function Sidebar({
   minimized,
   setMinimized,
-  onFolderSelect,
 }: SidebarProps) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const { selectedFolderId, setSelectedFolderId } = useFolderStore();
+
   const [currentParentId, setCurrentParentId] = useState<
     number | null
   >(null);
@@ -136,13 +139,11 @@ export default function Sidebar({
             ),
           });
           setActionModalOpen(false);
-          setSelected(null);
-          onFolderSelect?.(null);
+          setSelectedFolderId(null);
           NiceModal.hide(MODAL_IDS.GENERAL.CONFIRMATION);
         },
       });
     } catch {
-      console.log("Penghapusan folder dibatalkan.");
       setActionModalOpen(false);
       NiceModal.hide(MODAL_IDS.GENERAL.CONFIRMATION);
     }
@@ -167,13 +168,9 @@ export default function Sidebar({
     }));
   }
 
-  function getSelectedId() {
-    return selected ? Number(selected) : null;
-  }
-
   function Leaf({ node, elementProps }: RenderTreeNodePayload) {
     return (
-      <div className="flex justify-between items-center w-full py-1 group">
+      <div className="px-2 flex justify-between items-center w-full py-1 group">
         <div
           {...elementProps}
           style={{
@@ -184,7 +181,13 @@ export default function Sidebar({
           }}
           onClick={(e) => {
             elementProps.onClick?.(e);
-            setTimeout(() => onFolderSelect?.(getSelectedId()), 0);
+            setTimeout(
+              () =>
+                setSelectedFolderId(
+                  node.value ? Number(node.value) : null,
+                ),
+              0,
+            );
           }}
         >
           <Icon
@@ -238,9 +241,16 @@ export default function Sidebar({
         }}
       >
         <Stack gap="xs" align="stretch">
-          <Group justify="space-between" style={{ padding: "0 8px" }}>
+          <Group
+            justify="space-between"
+            style={{ padding: "0 8px" }}
+            className="flex items-center"
+          >
+            <Text fw={500} size="sm">
+              Pustaka
+            </Text>
             <Button
-              variant="filled"
+              variant="subtle"
               size="xs"
               leftSection={
                 <Icon
@@ -256,10 +266,10 @@ export default function Sidebar({
               }}
               disabled={isLoading}
             >
-              Tambah Folder
+              Tambah
             </Button>
           </Group>
-
+          <Divider />
           <Box
             style={{
               padding: 8,
@@ -270,22 +280,40 @@ export default function Sidebar({
             {isLoading ? (
               <Loader />
             ) : (
-              <Tree
-                data={mapped}
-                selectOnClick
-                clearSelectionOnOutsideClick
-                onChange={(value) => {
-                  if (typeof value === "string" || value === null) {
-                    setSelected(value);
-                    onFolderSelect?.(value ? Number(value) : null);
+              <>
+                <NavLink
+                  label={!minimized && "Home"}
+                  leftSection={
+                    <Icon
+                      icon="famicons:home"
+                      width={24}
+                      height={24}
+                    />
                   }
-                }}
-                renderNode={(payload) => <Leaf {...payload} />}
-                classNames={{
-                  label:
-                    "px-2 rounded-md [&[data-selected='true']]:text-black [&[data-selected='true']]:font-semibold ",
-                }}
-              />
+                  onClick={() => setSelectedFolderId(null)}
+                  pl={8}
+                  autoContrast
+                  active={selectedFolderId === null}
+                  fw={selectedFolderId === null ? 600 : 400}
+                />
+                <Tree
+                  data={mapped}
+                  selectOnClick
+                  clearSelectionOnOutsideClick
+                  onChange={(value) => {
+                    if (typeof value === "string" || value === null) {
+                      setSelectedFolderId(
+                        value ? Number(value) : null,
+                      );
+                    }
+                  }}
+                  renderNode={(payload) => <Leaf {...payload} />}
+                  classNames={{
+                    label:
+                      "px-2 rounded-md [&[data-selected='true']]:text-black [&[data-selected='true']]:font-semibold ",
+                  }}
+                />
+              </>
             )}
           </Box>
         </Stack>
