@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { TextInput, Burger, Group } from "@mantine/core";
 import UserMenu from "./UserMenu";
 import Image from "next/image";
-import logoBig from "../../../public/logo-fortech.webp";
+import logoBig from "../../../public/fortech-hitam-logo.png";
 import logoSmall from "../../../public/icon-fortech.jpg";
 
 interface HeaderProps {
