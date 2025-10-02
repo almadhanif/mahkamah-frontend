@@ -176,7 +176,7 @@ export default function Sidebar({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 8,
+            gap: 14,
             flexGrow: 1,
           }}
           onClick={(e) => {
@@ -285,13 +285,13 @@ export default function Sidebar({
                   label={!minimized && "Home"}
                   leftSection={
                     <Icon
-                      icon="famicons:home"
-                      width={24}
-                      height={24}
+                      icon="material-symbols-light:home-outline-rounded"
+                      width="28"
+                      height="28"
                     />
                   }
                   onClick={() => setSelectedFolderId(null)}
-                  pl={8}
+                  pl={6}
                   autoContrast
                   active={selectedFolderId === null}
                   fw={selectedFolderId === null ? 600 : 400}
